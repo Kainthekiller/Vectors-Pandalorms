@@ -34,19 +34,19 @@ NOTE: If the unit test is not on, that code will not be compiled!
 
 
 // Master toggle
-#define LAB_3	0
+#define LAB_3	1
 
 // Individual unit test toggles
-#define LIST_CTOR						0
-#define LIST_NODE_CTOR_DEFAULT			0
-#define LIST_NODE_CTOR					0
-#define LIST_ADDHEAD_EMPTY				0
-#define LIST_ADDHEAD					0
-#define LIST_ADDTAIL_EMPTY				0
-#define LIST_ADDTAIL					0
-#define LIST_CLEAR						0
-#define LIST_DTOR						0
-#define LIST_ITER_BEGIN					0
+#define LIST_CTOR						1 //Passing // Hammas FTW
+#define LIST_NODE_CTOR_DEFAULT			1 //Passing
+#define LIST_NODE_CTOR					1 //Passing
+#define LIST_ADDHEAD_EMPTY				1 //Passing
+#define LIST_ADDHEAD					1 //Passing
+#define LIST_ADDTAIL_EMPTY				1 //Passing
+#define LIST_ADDTAIL					1 //Passing
+#define LIST_CLEAR						1 //Passing
+#define LIST_DTOR						1 //Passing
+#define LIST_ITER_BEGIN					1
 #define LIST_ITER_END					0
 #define LIST_ITER_INCREMENT_PRE			0
 #define LIST_ITER_INCREMENT_POST		0
@@ -73,10 +73,17 @@ class DList {
 
 	struct Node {
 		T data;
-		Node* next, * prev;
-		Node(const T& _data, Node* _next = nullptr, Node* _prev = nullptr) {
+		Node* next, * prev;									//Tail
+		Node(const T& _data, Node* _next = nullptr, Node* _prev = nullptr)
+		{			
+				data = _data;
+				next = _next;
+				prev = _prev;
+			
 			// TODO: Implement this method
+		
 		}
+
 	};
 
 public:
@@ -212,12 +219,26 @@ public:
 	//		Creates a new empty linked list
 	DList() {
 		// TODO: Implement this method
+
+		mHead = nullptr;
+		mTail = nullptr;
+		mSize = 0;
 	}
 
 	// Destructor
 	//		Cleans up all dynamically allocated memory
 	~DList() {
 		// TODO: Implement this method
+		//Dont use a method here
+		Node* temp = mHead;
+		while (mHead != nullptr) {
+			mHead = mHead->next;
+			delete temp;
+			temp = mHead;
+		}
+		mSize = 0;
+		mTail = nullptr;
+		
 	}
 
 	// Copy constructor
@@ -252,19 +273,58 @@ public:
 	// In:	_data			The object to add to the list
 	void AddHead(const T& _data) {
 		// TODO: Implement this method
+										//Next  //Prev
+		Node* holder = new Node(_data, nullptr, nullptr);
+		if (mHead == nullptr)
+		{
+			mHead = holder; //Head (_data, next->NUll, Prev->nullptr)
+			mTail = holder; // Tail (_data, next->NULL, Prev->nullptr)
+			
+		}
+		else
+		{
+			mHead->prev = holder; //Mhead->Next = (Data, Next->Null, Prev->mHead)
+			holder->next = mHead;
+			mHead = holder;
+			
+		}
+		mSize++;
+
 	}
+	
 
 	// Add a piece of data to the end of the list
 	//
 	// In:	_data			The object to add to the list
 	void AddTail(const T& _data) {
 		// TODO: Implement this method
+
+										//Next  //Behind
+		Node* holder = new Node(_data, nullptr, mTail);
+		if (mTail == nullptr) {
+			mHead = holder;
+			mTail = holder;
+		}
+		else
+		{
+			 mTail->next = holder;
+			 mTail = holder;
+		}
+		mSize++;
 	}
 
 	// Clear the list of all dynamic memory
 	//			Resets the list to its default state
 	void Clear() {
 		// TODO: Implement this method
+		Node* temp = mHead;
+		while (mHead != nullptr) {
+			mHead = mHead->next;
+			delete temp;
+			temp = mHead;
+		}
+			mSize = 0;
+			mTail = nullptr;
 	}
 
 private:
@@ -330,6 +390,9 @@ public:
 	// Return: An iterator that has its curr pointing to the list's head
 	Iterator Begin() {
 		// TODO: Implement this method
+		Iterator temp = new Iterator;// create a iterator
+		
+		return temp;
 	}
 
 	// Set an Iterator pointing to the end of the list

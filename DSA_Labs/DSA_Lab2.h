@@ -34,7 +34,7 @@ NOTE: If the unit test is not on, that code will not be compiled!
 */
 
 // Master toggle
-#define LAB_2	1
+#define LAB_2	0
 
 // Individual unit test toggles
 #define LAB2_PALINDROME_NUMBER			1 //Passing
@@ -112,6 +112,7 @@ public:
 		// TODO: Implement this method
 
 		int total = 0;
+
 
 		std::ifstream reader(_input, std::ios_base::binary);
 
@@ -223,6 +224,7 @@ public:
 			{
 				mPalindromes.push_back(mValues[i]);
 				mValues.erase(mValues.begin()+i);
+				
 			}
 		}
 	}
