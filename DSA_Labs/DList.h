@@ -390,9 +390,10 @@ public:
 	// Return: An iterator that has its curr pointing to the list's head
 	Iterator Begin() {
 		// TODO: Implement this method
-		Iterator temp = new Iterator;// create a iterator
-		
-		return temp;
+		//Node* temp = mHead;
+		Iterator iter;
+		iter.mCurr = mHead;
+		return iter;
 	}
 
 	// Set an Iterator pointing to the end of the list
