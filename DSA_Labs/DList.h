@@ -3,7 +3,7 @@ File:			DList.h
 Author(s):
 	Base:		Justin Tackett
 				jtackett@fullsail.com
-	Student:
+	Student:    Yates, Phillip
 
 Created:		12.27.2020
 Last Modified:	02.26.2021
@@ -46,23 +46,23 @@ NOTE: If the unit test is not on, that code will not be compiled!
 #define LIST_ADDTAIL					1 //Passing
 #define LIST_CLEAR						1 //Passing
 #define LIST_DTOR						1 //Passing
-#define LIST_ITER_BEGIN					1
-#define LIST_ITER_END					0
-#define LIST_ITER_INCREMENT_PRE			0
-#define LIST_ITER_INCREMENT_POST		0
-#define LIST_ITER_DECREMENT_PRE			0
-#define LIST_ITER_DECREMENT_POST		0
-#define LIST_INSERT_EMPTY				0
-#define LIST_INSERT_HEAD				0
-#define LIST_INSERT						0
-#define LIST_ERASE_EMPTY				0
-#define LIST_ERASE_HEAD					0
-#define LIST_ERASE_TAIL					0
-#define LIST_ERASE						0
-#define LIST_COPY_CTOR_INT				0
-#define LIST_COPY_CTOR_USER_DEFINED		0
-#define LIST_ASSIGNMENT_OP_INT			0
-#define LIST_ASSIGNMENT_OP_USER_DEFINED	0
+#define LIST_ITER_BEGIN					1 //Passing 
+#define LIST_ITER_END					1 //Passing
+#define LIST_ITER_INCREMENT_PRE			1 //Passing
+#define LIST_ITER_INCREMENT_POST		1 //Passing
+#define LIST_ITER_DECREMENT_PRE			1 //Passing
+#define LIST_ITER_DECREMENT_POST		1 //Passing
+#define LIST_INSERT_EMPTY				1 //Passing
+#define LIST_INSERT_HEAD				1 //Passing
+#define LIST_INSERT						1 //Passing
+#define LIST_ERASE_EMPTY				1 //Passing
+#define LIST_ERASE_HEAD					1 //Passing
+#define LIST_ERASE_TAIL					1 //Passing
+#define LIST_ERASE						1 //Passing
+#define LIST_COPY_CTOR_INT				1 //Passing
+#define LIST_COPY_CTOR_USER_DEFINED		1 //Passing
+#define LIST_ASSIGNMENT_OP_INT			1 //Passing
+#define LIST_ASSIGNMENT_OP_USER_DEFINED	1 //Passing
 
 #if LAB_3
 
@@ -114,6 +114,18 @@ public:
 		*/
 		Iterator& operator++() {
 			// TODO: Implement this method
+			//mCurr->next holds the value I need
+			//mCurr->next is a node
+			//I need to return a Iterator
+
+			mCurr = mCurr->next;
+
+			return *this;
+
+	/*		Iterator iter;
+			iter.mCurr = mHead;
+			return iter;*/
+
 		}
 
 		// Post-fix increment operator
@@ -140,6 +152,10 @@ public:
 		*/
 		Iterator operator++(int) {
 			// TODO: Implement this method
+			Iterator temp = *this; // OLD
+			mCurr = mCurr->next; //Change Data
+
+			return temp; //Return OLD;
 		}
 
 		// Pre-fix decrement operator
@@ -163,6 +179,10 @@ public:
 		*/
 		Iterator& operator--() {
 			// TODO: Implement this method
+			mCurr = mCurr->prev;
+
+			return *this;
+		
 		}
 
 		// Post-fix decrement operator
@@ -189,6 +209,9 @@ public:
 		*/
 		Iterator operator--(int) {
 			// TODO: Implement this method
+			Iterator temp = *this;
+			mCurr = mCurr->prev;
+			return temp;
 		}
 
 		// Dereference operator
@@ -247,6 +270,11 @@ public:
 	// In:	_copy			The object to copy from
 	DList(const DList& _copy) {
 		// TODO: Implement this method
+	
+		*this = _copy;
+	
+
+
 	}
 
 	// Assignment operator
@@ -257,6 +285,13 @@ public:
 	//		This allows us to daisy-chain
 	DList& operator=(const DList& _assign) {
 		// TODO: Implement this method
+		if (this != &_assign) 
+		{
+			Clear();
+			RecursiveCopy(_assign.mHead);
+		}
+		return *this;
+
 	}
 
 private:
@@ -265,6 +300,11 @@ private:
 	// In:	_curr		The current Node to copy
 	void RecursiveCopy(const Node* _curr) {
 		// TODO (optional): Implement this method
+		if (_curr != NULL) {
+			RecursiveCopy(_curr->next);
+			AddHead(_curr->data);
+		}
+
 	}
 
 public:
@@ -290,6 +330,7 @@ public:
 		}
 		mSize++;
 
+		
 	}
 	
 
@@ -359,6 +400,32 @@ public:
 	// NOTE:	The iterator should now be pointing to the new node created
 	Iterator Insert(Iterator& _iter, const T& _data) {
 		// TODO: Implement this method
+		Node* n = new Node(_data); //Create a new Node
+			mSize++;
+		if (mHead == nullptr) {
+			mHead = n;
+			mTail = n;
+		}
+		else if (_iter.mCurr == mHead) 
+			//[2]<->[3]
+	//[n] <->
+		{
+			n->next = mHead;
+			mHead->prev = n;
+			mHead = n;
+		}
+		else
+		{
+			Node* current = _iter.mCurr;
+			Node* previous = _iter.mCurr->prev;
+			current->prev = n;
+			n->next = current;
+			n->prev = previous;
+			previous->next = n;
+		}
+		_iter.mCurr = n; // It needs to point to the new Node Created;
+		return _iter;
+		
 	}
 
 	// Erase a Node from the list
@@ -383,6 +450,43 @@ public:
 	// NOTE:	The iterator should now be pointing at the node after the one erased
 	Iterator Erase(Iterator& _iter) {
 		// TODO: Implement this method
+		Node* current = _iter.mCurr;
+		Node* Holder = NULL; //Used for next mostly
+		if (_iter.mCurr == mHead && _iter.mCurr == mTail)
+		{
+			mHead = nullptr;
+			mTail = nullptr;
+		}
+		//HEAD ERASER IF CURR != NPTR
+		else if (_iter.mCurr == mHead)
+		{
+			Holder = _iter.mCurr->next;
+			mHead = mHead->next;
+			mHead->prev = NULL;
+		}
+		//TAIL ERASER
+		else if (_iter.mCurr == mTail)
+		{
+			//No need for Holder No mans land no return. *Sorry these help me understand
+			mTail = mTail->prev;
+			mTail->next = NULL;
+		}
+		else 
+		{
+			Node* previous = _iter.mCurr->prev;
+			Holder = _iter.mCurr->next;
+
+			previous->next = Holder;
+			Holder->prev = previous;
+		}
+
+
+		
+
+		delete current;
+		_iter.mCurr = Holder;
+		mSize--;
+		return _iter;
 	}
 
 	// Set an Iterator at the front of the list
@@ -401,6 +505,11 @@ public:
 	// Return: An iterator that has its curr pointing to a null pointer
 	Iterator End() {
 		// TODO: Implement this method
+		Iterator iter;
+		mTail = nullptr;
+		iter.mCurr = mTail;
+
+		return iter;
 	}
 };
 
