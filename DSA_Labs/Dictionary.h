@@ -34,10 +34,10 @@ NOTE: If the unit test is not on, that code will not be compiled!
 
 
 // Master toggle
-#define LAB_5	0
+#define LAB_5	1
 
 // Individual unit test toggles
-#define DICT_CTOR					0
+#define DICT_CTOR					1
 #define DICT_PAIR_CTOR				0
 #define DICT_DTOR					0
 #define DICT_CLEAR					0
@@ -80,11 +80,11 @@ class Dictionary {
 				_comp.value == value);
 		}
 	};
-
+	//*Linked List
 	std::list<Pair>* mTable;				// A dynamic array of lists (these are the buckets)
 	size_t mNumBuckets;						// Number of elements in mTable
 	unsigned int(*mHashFunc)(const Key&);	// Pointer to the hash function
-
+	//Function pointer
 
 public:
 

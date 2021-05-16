@@ -34,7 +34,7 @@ NOTE: If the unit test is not on, that code will not be compiled!
 
 
 // Master toggle
-#define LAB_3	1
+#define LAB_3	0
 
 // Individual unit test toggles
 #define LIST_CTOR						1 //Passing // Hammas FTW
@@ -283,12 +283,12 @@ public:
 	//
 	// Return: The invoking object (by reference)
 	//		This allows us to daisy-chain
-	DList& operator=(const DList& _assign) {
+	DList& operator=(const DList& _assign) {   
 		// TODO: Implement this method
-		if (this != &_assign) 
+		if (this != &_assign)      //Needs to be passed by ref so it can come back changed
 		{
 			Clear();
-			RecursiveCopy(_assign.mHead);
+			RecursiveCopy(_assign.mHead); //Goes in to copy
 		}
 		return *this;
 
@@ -297,12 +297,12 @@ public:
 private:
 	// Optional recursive helper method for use with Rule of 3
 	//
-	// In:	_curr		The current Node to copy
-	void RecursiveCopy(const Node* _curr) {
-		// TODO (optional): Implement this method
+	// In:	_curr		The current Node to copy 
+	void RecursiveCopy(const Node* _curr) {     // 0<-[4]<->[5]<->[6]->0
+		// TODO (optional): Implement this method      C     CN
 		if (_curr != NULL) {
-			RecursiveCopy(_curr->next);
-			AddHead(_curr->data);
+			RecursiveCopy(_curr->next);  //This builds the list A too Z     // 0<-[4]<->[5]<->[6]->0
+			AddHead(_curr->data); //ADD head inserts starting with 6 then 5 then 4 so it ends up // 0<-[4]<->[5]<->[6]->0
 		}
 
 	}

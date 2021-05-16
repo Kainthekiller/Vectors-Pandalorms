@@ -3,7 +3,7 @@ File:			DSA_Lab4.h
 Author(s):
 	Base:		Justin Tackett
 				jtackett@fullsail.com
-	Student:
+	Student:    Phillip, Yates
 
 Created:		12.27.2020
 Last Modified:	02.26.2021
@@ -34,16 +34,16 @@ NOTE: If the unit test is not on, that code will not be compiled!
 
 
 // Master toggle
-#define LAB_4	0
+#define LAB_4	1
 
 // Individual unit test toggles
-#define LIST_QUEUE_ADD				0
-#define LIST_STACK_ADD				0
-#define LIST_QUEUE_REMOVE			0
-#define LIST_STACK_REMOVE			0
-#define LIST_INSERT_INDEX			0
-#define LIST_INSERT_ITER			0
-#define LIST_REMOVE_DECIMAL			0
+#define LIST_QUEUE_ADD				1 //Passing
+#define LIST_STACK_ADD				1 //Passing
+#define LIST_QUEUE_REMOVE			1 //Passing
+#define LIST_STACK_REMOVE			1 //Passing
+#define LIST_INSERT_INDEX			1 //Passing
+#define LIST_INSERT_ITER			1 //Passing
+#define LIST_REMOVE_DECIMAL			1 //Passing
 
 /************/
 /* Includes */
@@ -67,6 +67,14 @@ public:
 	//		_size			The number of elements in the array
 	void QueueOrderingAdd(const float* _arr, size_t _size) {
 		// TODO: Implement this method
+		for (int i = 0; i < _size; i++)
+		{
+			//DONT CHANGE ANYMORE !!!!
+			mList.push_back(_arr[i]);
+		}
+	
+
+
 	}
 
 	// Add all of the values from the array into the list using queue ordering
@@ -75,6 +83,15 @@ public:
 	//		_size			The number of elements in the array
 	void StackOrderingAdd(const float* _arr, size_t _size) {
 		// TODO: Implement this method
+		int temp = _size - 1;
+		for (int i = 0; i < _size; i++)
+		{
+			//DONT CHANGE ANYMORE !!!
+			mList.push_back(_arr[temp]);
+			
+			temp--;
+		}
+
 	}
 
 	// Remove a single value from the list using queue ordering
@@ -82,6 +99,10 @@ public:
 	// Return: The value that was removed
 	float QueueOrderingRemove() {
 		// TODO: Implement this method
+		std::list<float>::iterator it = mList.begin();
+		float holder = *it;
+		mList.remove(*it);
+		return holder;
 	}
 
 	// Remove a single value from the list using stack ordering
@@ -89,6 +110,10 @@ public:
 	// Return: The value that was removed
 	float StackOrderingRemove() {
 		// TODO: Implement this method
+		std::list<float>::iterator it = mList.begin();
+		float holder = *it;
+		mList.remove(*it);
+		return holder;
 	}
 
 	// Insert a value _index nodes away from the head node
@@ -107,6 +132,15 @@ public:
 	//		_val		The value to insert
 	void Insert(int _index, float _val) {
 		// TODO: Implement this method
+		int temp = 0;
+		for (int i = 0; i <= _index; i++)
+		{
+			temp++;
+		}
+		std::list<float>::iterator it = mList.begin();
+		std::advance(it, temp - 1);
+		mList.insert(it, _val);
+		
 	}
 
 	// Insert a value at the spot specified by the iterator passed in
@@ -115,6 +149,8 @@ public:
 	//		_val		The value to insert
 	void Insert(std::list<float>::iterator _iter, float _val) {
 		// TODO: Implement this method
+		mList.insert(_iter, _val);
+
 	}
 
 	// Remove all values from mList that have a decimal place > _decimal
@@ -125,6 +161,26 @@ public:
 	// Return: The total number of values removed
 	int RemoveDecimalGreater(float _decimal) {
 		// TODO: Implement this method
+		int count = 0;
+		int round = (int)_decimal; //0.41
+		float holder = _decimal - round; //Compare Value 
+		int itWhole;
+		float realChecker;
+
+
+		for (std::list<float>::const_iterator iter = mList.begin(); iter != mList.end();) {
+			itWhole = (int)*iter;  //12.55 = 13 // 12.33 = 12
+			realChecker = *iter - itWhole; //13 - 12.55 = 0.45  
+			if (realChecker > holder) {
+				iter = mList.erase(iter);
+				count++;
+			}
+			else {
+				++iter;
+			}
+		}
+			
+		return count;
 	}
 };
 
